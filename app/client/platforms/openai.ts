@@ -108,21 +108,23 @@ export class ChatGPTApi implements LLMApi {
 
         controller.signal.onabort = finish;
 
+        //发起事件流请求
         fetchEventSource(chatPath, {
           ...chatPayload,
+          //请求打开时
           async onopen(res) {
-            clearTimeout(requestTimeoutId);
+            clearTimeout(requestTimeoutId); //清楚超时
             const contentType = res.headers.get("content-type");
             console.log(
               "[OpenAI] request response content type: ",
               contentType,
             );
-
+            // 如果是文本内容直接结束
             if (contentType?.startsWith("text/plain")) {
               responseText = await res.clone().text();
               return finish();
             }
-
+            //如果响应状态不正常，进入异常处理块
             if (
               !res.ok ||
               !res.headers
@@ -150,7 +152,9 @@ export class ChatGPTApi implements LLMApi {
               return finish();
             }
           },
+          //接收到消息时
           onmessage(msg) {
+            // 如果结束标志已置或收到结束消息,结束
             if (msg.data === "[DONE]" || finished) {
               return finish();
             }
@@ -158,6 +162,17 @@ export class ChatGPTApi implements LLMApi {
             try {
               const json = JSON.parse(text);
               const delta = json.choices[0].delta.content;
+              /**
+               * Chat API在streaming模式下,会通过消息流的方式返回对话内容，结构如下：
+               *   "choices": [
+               *     {
+               *       "delta": {
+               *         "content": "Hello there!"
+               *       }
+               *     },...
+               * 其中choices数组第一项包含当前响应。delta属性表示本次响应相对上次的变化内容。
+               *
+               */
               if (delta) {
                 responseText += delta;
                 options.onUpdate?.(responseText, delta);
