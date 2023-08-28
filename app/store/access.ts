@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { DEFAULT_API_HOST, DEFAULT_MODELS, StoreKey } from "../constant";
 import { getHeaders } from "../client/api";
-import { BOT_HELLO } from "./chat";
 import { getClientConfig } from "../config/client";
 
 export interface AccessControlStore {
@@ -44,7 +43,6 @@ export const useAccessStore = create<AccessControlStore>()(
 
       enabledAccessControl() {
         get().fetch();
-
         return get().needCode;
       },
       updateCode(code: string) {
@@ -81,6 +79,7 @@ export const useAccessStore = create<AccessControlStore>()(
 
             if (res.disableGPT4) {
               DEFAULT_MODELS.forEach(
+                //修改模型是否可用
                 (m: any) => (m.available = !m.name.startsWith("gpt-4")),
               );
             }
