@@ -149,6 +149,7 @@ export const useAppConfig = create<ChatConfigStore>()(
     {
       name: StoreKey.Config,
       version: 3.7,
+      //
       migrate(persistedState, version) {
         const state = persistedState as ChatConfig;
 
