@@ -149,7 +149,7 @@ export const useAppConfig = create<ChatConfigStore>()(
     {
       name: StoreKey.Config,
       version: 3.7,
-      //
+      //migrate方法用于状态迁移
       migrate(persistedState, version) {
         const state = persistedState as ChatConfig;
 

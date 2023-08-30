@@ -24,7 +24,7 @@ export interface LLMConfig {
 }
 
 export interface ChatOptions {
-  messages: RequestMessage[];//user发送消息内容
+  messages: RequestMessage[]; //user发送消息内容
   config: LLMConfig;
 
   onUpdate?: (message: string, chunk: string) => void;
