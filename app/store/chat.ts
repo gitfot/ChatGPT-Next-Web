@@ -18,6 +18,10 @@ import { prettyObject } from "../utils/format";
 import { estimateTokenLength } from "../utils/token";
 import { nanoid } from "nanoid";
 
+/**
+ * 声明一个消息结构类型
+ * 注意：RequestMessage是请求openai接口所需要的结构
+ */
 export type ChatMessage = RequestMessage & {
 	date: string;
 	streaming?: boolean;
@@ -26,6 +30,11 @@ export type ChatMessage = RequestMessage & {
 	model?: ModelType;
 };
 
+
+/**
+ * 创建一个对话消息
+ * @param override
+ */
 export function createMessage(override: Partial<ChatMessage>): ChatMessage {
 	return {
 		id: nanoid(),
@@ -57,6 +66,8 @@ export interface ChatSession {
 }
 
 export const DEFAULT_TOPIC = Locale.Store.DefaultTopic;
+
+//创建一个默认首条展示消息
 export const BOT_HELLO: ChatMessage = createMessage({
 	role: "assistant",
 	content: Locale.Store.BotHello,
