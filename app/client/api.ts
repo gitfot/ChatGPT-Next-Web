@@ -24,13 +24,13 @@ export interface LLMConfig {
 }
 
 export interface ChatOptions {
-  messages: RequestMessage[];
+  messages: RequestMessage[];//user发送消息内容
   config: LLMConfig;
 
   onUpdate?: (message: string, chunk: string) => void;
-  onFinish: (message: string) => void;
+  onFinish: (message: string) => void; //消息结束时调用
   onError?: (err: Error) => void;
-  onController?: (controller: AbortController) => void;
+  onController?: (controller: AbortController) => void; //消息信号控制器
 }
 
 export interface LLMUsage {

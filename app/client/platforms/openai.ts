@@ -24,9 +24,16 @@ export interface OpenAIListModelResponse {
   }>;
 }
 
+/**
+ * openai接口请求类
+ */
 export class ChatGPTApi implements LLMApi {
   private disableListModels = true;
 
+  /**
+   * 拼接完整的http路径
+   * @param path
+   */
   path(path: string): string {
     let openaiUrl = useAccessStore.getState().openaiUrl;
     const apiPath = "/api/openai";
@@ -44,16 +51,26 @@ export class ChatGPTApi implements LLMApi {
     return [openaiUrl, path].join("/");
   }
 
+
+  /**
+   * 获取响应的对话内容
+   * @param res
+   */
   extractMessage(res: any) {
     return res.choices?.at(0)?.message?.content ?? "";
   }
 
+  /**
+   * 发送对话请求
+   * @param options
+   */
   async chat(options: ChatOptions) {
+    //待发送消息列表
     const messages = options.messages.map((v) => ({
       role: v.role,
       content: v.content,
     }));
-
+    //模型列表
     const modelConfig = {
       ...useAppConfig.getState().modelConfig,
       ...useChatStore.getState().currentSession().mask.modelConfig,
@@ -62,6 +79,7 @@ export class ChatGPTApi implements LLMApi {
       },
     };
 
+    //消息体
     const requestPayload = {
       messages,
       stream: options.config.stream,
@@ -73,13 +91,15 @@ export class ChatGPTApi implements LLMApi {
     };
 
     console.log("[Request] openai payload: ", requestPayload);
-
+    //是否使用event-stream请求响应类型
     const shouldStream = !!options.config.stream;
+    //创建一个消息信号控制器
     const controller = new AbortController();
     options.onController?.(controller);
 
     try {
       const chatPath = this.path(OpenaiPath.ChatPath);
+      //封装消息体
       const chatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),
@@ -87,17 +107,17 @@ export class ChatGPTApi implements LLMApi {
         headers: getHeaders(),
       };
 
-      // make a fetch request
+      //设置请求超时时间
       const requestTimeoutId = setTimeout(
         () => controller.abort(),
         REQUEST_TIMEOUT_MS,
       );
-
+      // 使用EventSource 与服务器进行通信
       if (shouldStream) {
         let responseText = "";
         let finished = false;
 
-        //对话结束时调用
+        //对话结束时调用。作用是将对话内容更新到store中
         const finish = () => {
           if (!finished) {
             //onFinish方法会将responseText设置到store-[onNewMessage]
@@ -196,6 +216,7 @@ export class ChatGPTApi implements LLMApi {
 
         const resJson = await res.json();
         const message = this.extractMessage(resJson);
+        //将对话内容更新会store
         options.onFinish(message);
       }
     } catch (e) {
@@ -204,6 +225,9 @@ export class ChatGPTApi implements LLMApi {
     }
   }
 
+  /**
+   * 查询额度用量请求
+   */
   async usage() {
     const formatDate = (d: Date) =>
       `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d
