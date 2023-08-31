@@ -73,6 +73,10 @@ export const BOT_HELLO: ChatMessage = createMessage({
 	content: Locale.Store.BotHello,
 });
 
+
+/**
+ * 创建一个默认会话模型
+ */
 function createEmptySession(): ChatSession {
 	return {
 		id: nanoid(),

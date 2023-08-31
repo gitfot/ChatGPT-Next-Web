@@ -48,6 +48,9 @@ export const createEmptyMask = () =>
     createdAt: Date.now(),
   } as Mask);
 
+/**
+ * 面具Store操作类
+ */
 export const useMaskStore = create<MaskStore>()(
   persist(
     (set, get) => ({
