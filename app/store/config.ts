@@ -4,6 +4,8 @@ import { LLMModel } from "../client/api";
 import { getClientConfig } from "../config/client";
 import { DEFAULT_INPUT_TEMPLATE, DEFAULT_MODELS, StoreKey } from "../constant";
 
+//作用：限定了只能是DEFAULT_MODELS数组中name的具体几个字符串字面量的值。
+//原理：[number]表示通过数组的索引来获取数组元素的类型。
 export type ModelType = (typeof DEFAULT_MODELS)[number]["name"];
 
 export enum SubmitKey {

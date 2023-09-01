@@ -75,7 +75,7 @@ export const BOT_HELLO: ChatMessage = createMessage({
 
 
 /**
- * 创建一个默认会话模型
+ * 创建一个默认会话窗口
  */
 function createEmptySession(): ChatSession {
 	return {
@@ -122,10 +122,19 @@ interface ChatStore {
 	clearAllData: () => void;
 }
 
+/**
+ * token统计
+ * @param msgs
+ */
 function countMessages(msgs: ChatMessage[]) {
 	return msgs.reduce((pre, cur) => pre + estimateTokenLength(cur.content), 0);
 }
 
+/**
+ * 未知
+ * @param input
+ * @param modelConfig
+ */
 function fillTemplateWith(input: string, modelConfig: ModelConfig) {
 	const vars = {
 		model: modelConfig.model,
@@ -149,6 +158,9 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
 	return output;
 }
 
+/**
+ *
+ */
 export const useChatStore = create<ChatStore>()(
 	persist(
 		(set, get) => ({
@@ -168,6 +180,7 @@ export const useChatStore = create<ChatStore>()(
 				});
 			},
 
+			//移动会话窗口
 			moveSession(from: number, to: number) {
 				set((state) => {
 					const { sessions, currentSessionIndex: oldIndex } = state;
@@ -193,6 +206,7 @@ export const useChatStore = create<ChatStore>()(
 				});
 			},
 
+			//创建一个对话窗口
 			newSession(mask) {
 				const session = createEmptySession();
 
@@ -223,27 +237,31 @@ export const useChatStore = create<ChatStore>()(
 				get().selectSession(limit(i + delta));
 			},
 
+			//删除一个对话窗口
 			deleteSession(index) {
 				const deletingLastSession = get().sessions.length === 1;
 				const deletedSession = get().sessions.at(index);
 
 				if (!deletedSession) return;
 
+				//将sessions复制到一个新数组，在新数组中删除选择的对话
 				const sessions = get().sessions.slice();
 				sessions.splice(index, 1);
 
 				const currentIndex = get().currentSessionIndex;
+				//获取删除会话的后下一个索引的位置
 				let nextIndex = Math.min(
+					//Number()函数可以将布尔值true转换为1，将布尔值false转换为0
 					currentIndex - Number(index < currentIndex),
 					sessions.length - 1,
 				);
-
+				//当仅有一个会话时，删除后重新创建一个默认对话
 				if (deletingLastSession) {
 					nextIndex = 0;
 					sessions.push(createEmptySession());
 				}
 
-				// for undo delete action
+				// 备份消息窗口状态，用于撤销上一步删除操作
 				const restoreState = {
 					currentSessionIndex: get().currentSessionIndex,
 					sessions: get().sessions.slice(),
@@ -258,6 +276,7 @@ export const useChatStore = create<ChatStore>()(
 					Locale.Home.DeleteToast,
 					{
 						text: Locale.Home.Revert,
+						//撤销删除操作
 						onClick() {
 							set(() => restoreState);
 						},

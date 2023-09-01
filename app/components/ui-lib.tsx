@@ -212,6 +212,12 @@ export function Toast(props: ToastProps) {
   );
 }
 
+/**
+ * 弹出提示
+ * @param content 操作内容
+ * @param action 附带操作，比如"撤销删除"
+ * @param delay 展示时间
+ */
 export function showToast(
   content: string,
   action?: ToastProps["action"],
