@@ -30,7 +30,7 @@ const DEFAULT_OPENAI_URL =
 console.log("[API] default openai url", DEFAULT_OPENAI_URL);
 
 /**
- *
+ * 访问权限配置Store
  */
 export const useAccessStore = create<AccessControlStore>()(
 	persist(
@@ -65,6 +65,7 @@ export const useAccessStore = create<AccessControlStore>()(
 					!!get().token || !!get().accessCode || !get().enabledAccessControl()
 				);
 			},
+			//拉取访问配置信息
 			fetch() {
 				if (fetchState > 0 || getClientConfig()?.buildMode === "export") return;
 				fetchState = 1;

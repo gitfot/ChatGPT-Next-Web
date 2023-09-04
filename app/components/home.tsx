@@ -183,6 +183,7 @@ export function Home() {
 
 	useEffect(() => {
 		console.log("[Config] got config from build time", getClientConfig());
+		//拉取访问配置信息
 		useAccessStore.getState().fetch();
 	}, []);
 
