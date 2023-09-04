@@ -100,6 +100,9 @@ export const ModalConfigValidator = {
   },
 };
 
+/**
+ * 客户端配置store
+ */
 export const useAppConfig = create<ChatConfigStore>()(
   persist(
     (set, get) => ({

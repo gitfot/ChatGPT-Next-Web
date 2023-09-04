@@ -131,7 +131,7 @@ function countMessages(msgs: ChatMessage[]) {
 }
 
 /**
- * 未知
+ * 填充模板
  * @param input
  * @param modelConfig
  */
@@ -271,7 +271,7 @@ export const useChatStore = create<ChatStore>()(
 					currentSessionIndex: nextIndex,
 					sessions,
 				}));
-
+				//底部弹出框
 				showToast(
 					Locale.Home.DeleteToast,
 					{
@@ -285,6 +285,7 @@ export const useChatStore = create<ChatStore>()(
 				);
 			},
 
+			//获取当前会话窗口
 			currentSession() {
 				let index = get().currentSessionIndex;
 				const sessions = get().sessions;
@@ -299,9 +300,10 @@ export const useChatStore = create<ChatStore>()(
 				return session;
 			},
 
+			//发送新消息时更新session信息
 			onNewMessage(message) {
 				get().updateCurrentSession((session) => {
-					session.messages = session.messages.concat();
+					session.messages = session.messages.concat(); //数组拷贝
 					session.lastUpdate = Date.now();
 				});
 				get().updateStat(message);
@@ -409,6 +411,7 @@ export const useChatStore = create<ChatStore>()(
 				} as ChatMessage;
 			},
 
+			//
 			getMessagesWithMemory() {
 				const session = get().currentSession();
 				const modelConfig = session.mask.modelConfig;
@@ -512,6 +515,7 @@ export const useChatStore = create<ChatStore>()(
 				});
 			},
 
+			//总结对话窗口主题(当主题为"新的聊天"时)
 			summarizeSession() {
 				const config = useAppConfig.getState();
 				const session = get().currentSession();
@@ -604,6 +608,7 @@ export const useChatStore = create<ChatStore>()(
 				}
 			},
 
+			//更新charCount
 			updateStat(message) {
 				get().updateCurrentSession((session) => {
 					session.stat.charCount += message.content.length;
@@ -611,6 +616,7 @@ export const useChatStore = create<ChatStore>()(
 				});
 			},
 
+			//对当前session进行修改操作
 			updateCurrentSession(updater) {
 				const sessions = get().sessions;
 				const index = get().currentSessionIndex;
