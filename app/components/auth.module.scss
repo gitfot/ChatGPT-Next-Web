@@ -16,13 +16,6 @@
     flex-direction: column;
 }
 
-.input-form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-}
-
 .auth-page {
     @include flex-column-center;
     height: 100%;
