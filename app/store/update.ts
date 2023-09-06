@@ -35,6 +35,10 @@ function formatVersionDate(t: string) {
   ].join("");
 }
 
+/**
+ * 获取最新版本号
+ * @param type
+ */
 async function getVersion(type: "date" | "tag") {
   if (type === "date") {
     const data = (await (await fetch(FETCH_COMMIT_URL)).json()) as {
@@ -55,6 +59,9 @@ async function getVersion(type: "date" | "tag") {
   }
 }
 
+/**
+ * 更新版本号和token用量
+ */
 export const useUpdateStore = create<UpdateStore>()(
   persist(
     (set, get) => ({

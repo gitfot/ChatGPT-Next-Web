@@ -11,11 +11,11 @@ const cn = {
       : "访问密码不正确或为空，请前往[登录](/#/auth)页输入正确的访问密码，或者在[设置](/#/settings)页填入你自己的 OpenAI API Key。",
   },
   Auth: {
-    Title: "需要密码",
-    Tips: "管理员开启了密码验证，请在下方填入访问码",
-    Input: "在此处填写访问码",
+    Title: "账号登录",
+    Name: "请输入邮箱",
+    Password: "请输入密码",
     Confirm: "确认",
-    Later: "稍后再说",
+    Later: "注册新账号",
   },
   ChatItem: {
     ChatItemCount: (count: number) => `${count} 条对话`,

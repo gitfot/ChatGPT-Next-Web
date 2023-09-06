@@ -104,7 +104,12 @@ interface ModalProps {
 	onClose?: () => void;
 }
 
+/**
+ * 编辑提示词弹出框
+ * 位置：设置->编辑（提示词列表）->编辑提示词
+ */
 export function Modal(props: ModalProps) {
+	//添加一个键盘esc监听事件
 	useEffect(() => {
 		const onKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
@@ -113,7 +118,7 @@ export function Modal(props: ModalProps) {
 		};
 
 		window.addEventListener("keydown", onKeyDown);
-
+		//返回一个清除函数，这是useEffect的清除机制,可以在组件卸载时执行。
 		return () => {
 			window.removeEventListener("keydown", onKeyDown);
 		};

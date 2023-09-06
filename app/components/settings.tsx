@@ -50,6 +50,11 @@ import {getClientConfig} from "../config/client";
 import {useSyncStore} from "../store/sync";
 import {nanoid} from "nanoid";
 
+/**
+ * 提示词编辑组件
+ * @param props
+ * @constructor
+ */
 function EditPromptModal(props: { id: string; onClose: () => void }) {
 	const promptStore = usePromptStore();
 	const prompt = promptStore.get(props.id);
@@ -99,10 +104,15 @@ function EditPromptModal(props: { id: string; onClose: () => void }) {
 	) : null;
 }
 
+/**
+ * 提示词列表组件(设置->编辑)
+ * @param props
+ * @constructor
+ */
 function UserPromptModal(props: { onClose?: () => void }) {
 	const promptStore = usePromptStore();
-	const userPrompts = promptStore.getUserPrompts();
-	const builtinPrompts = SearchService.builtinPrompts;
+	const userPrompts = promptStore.getUserPrompts(); //用户自定义提示词
+	const builtinPrompts = SearchService.builtinPrompts; //内置提示词
 	const allPrompts = userPrompts.concat(builtinPrompts);
 	const [searchInput, setSearchInput] = useState("");
 	const [searchPrompts, setSearchPrompts] = useState<Prompt[]>([]);
@@ -203,6 +213,10 @@ function UserPromptModal(props: { onClose?: () => void }) {
 	);
 }
 
+/**
+ * 配置重置组件
+ * @constructor
+ */
 function DangerItems() {
 	const chatStore = useChatStore();
 	const appConfig = useAppConfig();

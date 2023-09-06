@@ -159,7 +159,7 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
 }
 
 /**
- *
+ * 对话窗口store
  */
 export const useChatStore = create<ChatStore>()(
 	persist(
