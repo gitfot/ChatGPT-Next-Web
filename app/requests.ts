@@ -101,7 +101,6 @@ export async function requestLogin(
 }
 
 export async function requestRegister(
-    name: string,
     username: string,
     password: string,
     captchaId: string,
