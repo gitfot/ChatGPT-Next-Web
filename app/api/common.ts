@@ -6,12 +6,16 @@ const PROTOCOL = process.env.PROTOCOL || DEFAULT_PROTOCOL;
 const BASE_URL = process.env.BASE_URL || OPENAI_URL;
 const DISABLE_GPT4 = !!process.env.DISABLE_GPT4;
 
+/**
+ * 替换openai接口的代理地址
+ * @param req
+ */
 export async function requestOpenai(req: NextRequest) {
 	const controller = new AbortController();
 	const authValue = req.headers.get("Authorization") ?? "";
+	// 获取/api/openai/后面的路径
 	const openaiPath = `${req.nextUrl.pathname}${req.nextUrl.search}`.replaceAll(
-		// "/api/openai/",
-		"/api/",
+		"/api/openai/",
 		"",
 	);
 
@@ -74,7 +78,11 @@ export async function requestOpenai(req: NextRequest) {
 	}
 }
 
-export async function request(req: NextRequest) {
+/**
+ * 替换普通接口的代理地址为BASE_URL
+ * @param req
+ */
+export async function requestCommon(req: NextRequest) {
 	const controller = new AbortController();
 	let baseUrl = BASE_URL;
 

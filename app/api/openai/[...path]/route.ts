@@ -3,7 +3,6 @@ import { getServerSideConfig } from "@/app/config/server";
 import { OpenaiPath } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "../../auth";
 import { requestOpenai } from "../../common";
 
 const ALLOWD_PATH = new Set(Object.values(OpenaiPath));
@@ -31,7 +30,7 @@ async function handle(
   }
 
   const subpath = params.path.join("/");
-
+  // 当路径带有'/openai'时校验路径
   if (!ALLOWD_PATH.has(subpath)) {
     console.log("[OpenAI Route] forbidden path ", subpath);
     return NextResponse.json(
@@ -45,12 +44,12 @@ async function handle(
     );
   }
 
-  const authResult = auth(req);
-  if (authResult.error) {
-    return NextResponse.json(authResult, {
-      status: 401,
-    });
-  }
+  // const authResult = auth(req);
+  // if (authResult.error) {
+  //   return NextResponse.json(authResult, {
+  //     status: 401,
+  //   });
+  // }
 
   try {
     const response = await requestOpenai(req);

@@ -131,8 +131,9 @@ function Screen() {
 	}, []);
 
 	return (
-		<div
-			className={
+
+		isAuth ? (<><AuthPage/></>) :
+			<div className={
 				styles.container +
 				` ${
 					config.tightBorder && !isMobileScreen
@@ -140,12 +141,7 @@ function Screen() {
 						: styles.container
 				} ${getLang() === "ar" ? styles["rtl-screen"] : ""}`
 			}
-		>
-			{isAuth ? (
-				<>
-					<AuthPage/>
-				</>
-			) : (
+			>(
 				<>
 					<SideBar className={isHome ? styles["sidebar-show"] : ""}/>
 
@@ -159,7 +155,7 @@ function Screen() {
 						</Routes>
 					</div>
 				</>
-			)}
+			)
 		</div>
 	);
 }

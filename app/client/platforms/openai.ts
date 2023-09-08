@@ -294,6 +294,9 @@ export class ChatGPTApi implements LLMApi {
 		} as LLMUsage;
 	}
 
+	/**
+	 * 查询账户可用模型
+	 */
 	async models(): Promise<LLMModel[]> {
 		if (this.disableListModels) {
 			return DEFAULT_MODELS.slice();

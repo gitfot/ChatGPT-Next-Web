@@ -7,8 +7,10 @@ import {useAccessStore} from "../store";
 import Locale from "../locales";
 
 import BotIcon from "../icons/bot.svg";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {getClientConfig} from "../config/client";
+import {showToast} from "@/app/components/ui-lib";
+import {useAuthStore} from "@/app/store/api/auth";
 
 export function AuthPage() {
 	const navigate = useNavigate();
@@ -16,12 +18,45 @@ export function AuthPage() {
 
 	const goHome = () => navigate(Path.Home);
 
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+	const [loadingUsage, setLoadingUsage] = useState(false);
+	const authStore = useAuthStore();
+
 	useEffect(() => {
 		if (getClientConfig()?.isApp) {
 			navigate(Path.Settings);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	function loginHandler() {
+		if (username === "") {
+			showToast(Locale.LoginPage.Toast.EmptyUserName);
+			return;
+		}
+		if (password === "") {
+			showToast(Locale.LoginPage.Toast.EmptyPassword);
+			return;
+		}
+		setLoadingUsage(true);
+		showToast(Locale.LoginPage.Toast.Logging);
+
+		authStore
+			.login(username, password)
+			.then((result) => {
+				console.log("result", result);
+				if (result && result.code == 0) {
+					showToast(Locale.LoginPage.Toast.Success);
+					navigate(Path.Chat);
+				} else if (result && result.message) {
+					showToast(result.message);
+				}
+			})
+			.finally(() => {
+				setLoadingUsage(false);
+			});
+	}
 
 	return (
 		<div className={styles["auth-page"]}>
@@ -37,18 +72,18 @@ export function AuthPage() {
 						className={styles["auth-input"]}
 						type="email"
 						placeholder={Locale.Auth.Name}
-						value={access.accessCode}
+						value={username}
 						onChange={(e) => {
-							access.updateCode(e.currentTarget.value);
+							setUsername(e.currentTarget.value)
 						}}
 					/>
 					<input
 						className={styles["auth-input"]}
 						type="password"
 						placeholder={Locale.Auth.Password}
-						value={access.accessCode}
+						value={password}
 						onChange={(e) => {
-							access.updateCode(e.currentTarget.value);
+							setPassword(e.currentTarget.value)
 						}}
 					/>
 				</div>
@@ -57,9 +92,9 @@ export function AuthPage() {
 					<IconButton
 						text={Locale.Auth.Confirm}
 						type="primary"
-						onClick={goHome}
+						onClick={loginHandler}
 					/>
-					<IconButton text={Locale.Auth.Later} onClick={goHome}/>
+					<IconButton text={Locale.Auth.Later}/>
 				</div>
 			</div>
 

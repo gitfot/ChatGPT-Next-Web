@@ -10,8 +10,16 @@ const cn = {
       ? "检测到无效 API Key，请前往[设置](/#/settings)页检查 API Key 是否配置正确。"
       : "访问密码不正确或为空，请前往[登录](/#/auth)页输入正确的访问密码，或者在[设置](/#/settings)页填入你自己的 OpenAI API Key。",
   },
+  LoginPage: {
+    Toast: {
+      Success: "登录成功",
+      Logging: "登录中……",
+      EmptyUserName: "用户名或邮箱不能为空",
+      EmptyPassword: "密码不能为空！",
+    },
+  },
   Auth: {
-    Title: "账号登录",
+    Title: "欢迎回来!",
     Name: "请输入邮箱",
     Password: "请输入密码",
     Confirm: "确认",
