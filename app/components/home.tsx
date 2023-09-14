@@ -1,5 +1,7 @@
 "use client";
 
+import {useAuthStore} from "@/app/store/api/auth";
+
 require("../polyfill");
 
 import {useState, useEffect} from "react";
@@ -123,7 +125,8 @@ function Screen() {
 	const config = useAppConfig();
 	const location = useLocation();
 	const isHome = location.pathname === Path.Home;
-	const isAuth = location.pathname === Path.Auth;
+	// const isAuth = location.pathname === Path.Auth;
+	const isAuth = useAuthStore(state => state.token)
 	const isMobileScreen = useMobileScreen();
 
 	useEffect(() => {
@@ -131,8 +134,7 @@ function Screen() {
 	}, []);
 
 	return (
-
-		isAuth ? (<><AuthPage/></>) :
+		!isAuth ? (<><AuthPage/></>) :
 			<div className={
 				styles.container +
 				` ${
@@ -141,7 +143,7 @@ function Screen() {
 						: styles.container
 				} ${getLang() === "ar" ? styles["rtl-screen"] : ""}`
 			}
-			>(
+			>
 				<>
 					<SideBar className={isHome ? styles["sidebar-show"] : ""}/>
 
@@ -155,7 +157,7 @@ function Screen() {
 						</Routes>
 					</div>
 				</>
-			)
+
 		</div>
 	);
 }

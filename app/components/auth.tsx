@@ -46,8 +46,10 @@ export function AuthPage() {
 			.login(username, password)
 			.then((result) => {
 				console.log("result", result);
-				if (result && result.code == 0) {
+				if (result && result.code == 200) {
 					showToast(Locale.LoginPage.Toast.Success);
+					// todo 获取用户信息
+
 					navigate(Path.Chat);
 				} else if (result && result.message) {
 					showToast(result.message);
