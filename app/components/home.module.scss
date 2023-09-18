@@ -61,6 +61,12 @@
     }
   }
 
+  .sidebar-new-chat-button {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+  }
+
   &:hover,
   &:active {
     .sidebar-drag {
@@ -163,10 +169,10 @@
 }
 
 .chat-item {
-  padding: 10px 14px;
+  padding: 5px 14px;
   background-color: var(--white);
   border-radius: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   box-shadow: var(--card-shadow);
   transition: background-color 0.3s ease;
   cursor: pointer;
