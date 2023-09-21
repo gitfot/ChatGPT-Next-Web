@@ -1,13 +1,25 @@
-export interface CallResult<T> {
-    code: number;
-    message: string;
-    data?: T;
+export interface userInfo {
+    avatarName:string;
+    avatarPath:string;
+    email:string;
+    enabled:string;
+    gender:string;
+    id:string;
+    nickName:string;
+    phone:string;
+    username:string;
+}
+
+export interface userAll {
+    authorities: any;
+    dataScopes: any;
+    roles: any;
+    user: userInfo;
 }
 
 export interface LoginResult {
-    code: number;
-    message: string;
-    data?: any;
+    user: userAll;
+    token: string;
 }
 
 export interface RegisterResult {
@@ -23,7 +35,7 @@ export async function request(
     options?: {
         onError: (error: Error, statusCode?: number) => void;
     },
-): Promise<CallResult<any>> {
+): Promise<any> {
     try {
         // 获取环境变量中的基础URL和构建模式
         const BASE_URL = process.env.BASE_URL;
@@ -37,38 +49,22 @@ export async function request(
             },
             body: JSON.stringify(body),
         });
+        let json: any;
+        try {
+            json = (await res.json());
+        } catch (e) {
+            return {
+                code: -1,
+                message: "json formatting failure",
+            };
+        }
+        // console.info("json-" + JSON.parse(json));
         if (res.status == 200) {
-            let json: CallResult<any>;
-            try {
-                json = (await res.json()) as CallResult<any>;
-            } catch (e) {
-                console.error("json formatting failure", e);
-                options?.onError({
-                    name: "json formatting failure",
-                    message: "json formatting failure",
-                });
-                return {
-                    code: -1,
-                    message: "json formatting failure",
-                };
-            }
-            if (json.code != 200) {
-                options?.onError({
-                    name: json.message,
-                    message: json.message,
-                });
-            }
             return json;
         }
-        console.error("register result error(1)", res);
-        options?.onError({
-            name: "unknown error(1)",
-            message: "unknown error(1)",
-        });
-        return {
-            code: -1,
-            message: "unknown error(2)",
-        };
+        else {
+            //
+        }
     } catch (err) {
         console.error("NetWork Error(3)", err);
         options?.onError(err as Error);
@@ -79,25 +75,11 @@ export async function request(
     }
 }
 
-export function requestResetPassword(
-    password: string,
-    email: string,
-    code: string,
-    options?: {
-        onError: (error: Error, statusCode?: number) => void;
-    },
-): Promise<RegisterResult> {
-    return request("/resetPassword", "POST", {password, code, email}, options);
-}
-
 export async function requestLogin(
     username: string,
     password: string,
-    options?: {
-        onError: (error: Error, statusCode?: number) => void;
-    },
 ): Promise<LoginResult> {
-    return request("/user/login/email", "POST", {username, password}, options);
+    return request("/auth/login", "POST", {username, password});
 }
 
 export async function requestRegister(
@@ -107,15 +89,11 @@ export async function requestRegister(
     captchaInput: string,
     email: string,
     code: string,
-    options?: {
-        onError: (error: Error, statusCode?: number) => void;
-    },
 ): Promise<RegisterResult> {
     return request(
         "/register",
         "POST",
-        {name, username, password, captchaId, captcha: captchaInput, email, code},
-        options,
+        {username, password, captchaId, captcha: captchaInput, email, code},
     );
 }
 
@@ -135,6 +113,17 @@ export async function requestSendEmailCode(
         },
         options,
     );
+}
+
+export function requestResetPassword(
+    password: string,
+    email: string,
+    code: string,
+    options?: {
+        onError: (error: Error, statusCode?: number) => void;
+    },
+): Promise<RegisterResult> {
+    return request("/resetPassword", "POST", {password, code, email}, options);
 }
 
 

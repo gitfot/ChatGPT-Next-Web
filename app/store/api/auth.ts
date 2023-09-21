@@ -1,17 +1,14 @@
 import {create} from "zustand";
 import {persist} from "zustand/middleware";
 import {StoreKey} from "../../constant";
-import {requestLogin} from "../../requests";
-import {
-	requestRegister,
-	requestSendEmailCode,
-	requestResetPassword,
-} from "../../requests";
+import {requestLogin, requestRegister, requestResetPassword, requestSendEmailCode} from "../../requests";
 
 export interface AuthStore {
 	token: string;
 	username: string;
 	email: string;
+	avatar:string;
+	userId:string
 	login: (username: string, password: string) => Promise<any>;
 	logout: () => void;
 	sendEmailCode: (email: string) => Promise<any>;
@@ -37,29 +34,23 @@ export const useAuthStore = create<AuthStore>()(
 		(set, get) => ({
 			userId: "",
 			username: "",
+			avatar:"",
 			email: "",
 			token: "",
 
 			async login(username, password) {
-				let result = await requestLogin(username, password, {
-					onError: (err) => {
-						console.error(err);
-					},
-				});
-				console.log("result", result);
-				if (result && result.code == 200) {
-					set(() => ({
-						username,
-						email: "",
-						token: result.data?.token || "",
-						userId: result.data?.baseUserId || "",
-					}));
-				}
-
-				return result;
+				let {user:{user:userinfo},token} = await requestLogin(username, password);
+				set(() => ({
+					avatar:userinfo.avatarPath,
+					username: userinfo.username,
+					email: userinfo.email,
+					token: token,
+					userId: userinfo.id,
+				}));
 			},
 			logout() {
 				set(() => ({
+					avatar:"",
 					username: "",
 					email: "",
 					token: "",
@@ -70,20 +61,18 @@ export const useAuthStore = create<AuthStore>()(
 				set(() => ({token: ""}));
 			},
 			async sendEmailCodeForResetPassword(email) {
-				let result = await requestSendEmailCode(email, true, {
+				return await requestSendEmailCode(email, true, {
 					onError: (err) => {
 						console.error(err);
 					},
 				});
-				return result;
 			},
 			async sendEmailCode(email) {
-				let result = await requestSendEmailCode(email, false, {
+				return await requestSendEmailCode(email, false, {
 					onError: (err) => {
 						console.error(err);
 					},
 				});
-				return result;
 			},
 			async register(
 				username,
@@ -99,12 +88,7 @@ export const useAuthStore = create<AuthStore>()(
 					captchaId,
 					captchaInput,
 					email,
-					code,
-					{
-						onError: (err) => {
-							console.error(err);
-						},
-					},
+					code
 				);
 				console.log("result", result);
 				if (result && result.code == 0) {
