@@ -1,7 +1,9 @@
 import {create} from "zustand";
 import {persist} from "zustand/middleware";
 import {StoreKey} from "../../constant";
-import {requestLogin, requestRegister, requestResetPassword, requestSendEmailCode} from "../../requests";
+// import {request} from "../../utils/request"
+import {request} from "../../requests"
+import {showToast} from "@/app/components/ui-lib";
 
 export interface AuthStore {
 	token: string;
@@ -29,6 +31,73 @@ export interface AuthStore {
 	removeToken: () => void;
 }
 
+export interface userInfo {
+	avatarName:string;
+	avatarPath:string;
+	email:string;
+	enabled:string;
+	gender:string;
+	id:string;
+	nickName:string;
+	phone:string;
+	username:string;
+}
+
+export interface LoginResult {
+	token: string;
+	user: {
+		authorities: any;
+		dataScopes: any;
+		roles: any;
+		user: userInfo;
+	}
+}
+
+export interface RegisterResult {
+    code: number;
+    message: string;
+    data?: any;
+}
+
+export async function requestLogin(username: string, password: string): Promise<LoginResult> {
+	return request.post("/auth/login", {username, password});
+}
+
+export async function requestRegister(
+	username: string,
+	password: string,
+	captchaId: string,
+	captchaInput: string,
+	email: string,
+	code: string,
+): Promise<RegisterResult> {
+	return request.post(
+		"/register",
+		{username, password, captchaId, captcha: captchaInput, email, code},
+	);
+}
+
+export async function requestSendEmailCode(
+	email: string,
+	resetPassword: boolean,
+): Promise<RegisterResult> {
+	return request.post(
+		"/sendRegisterEmailCode",
+		{
+			email,
+			type: resetPassword ? "resetPassword" : "register",
+		}
+	);
+}
+
+export async function requestResetPassword(
+    password: string,
+    email: string,
+    code: string,
+): Promise<RegisterResult> {
+    return request.post("/resetPassword", {password, code, email});
+}
+
 export const useAuthStore = create<AuthStore>()(
 	persist(
 		(set, get) => ({
@@ -37,16 +106,19 @@ export const useAuthStore = create<AuthStore>()(
 			avatar:"",
 			email: "",
 			token: "",
-
 			async login(username, password) {
-				let {user:{user:userinfo},token} = await requestLogin(username, password);
-				set(() => ({
-					avatar:userinfo.avatarPath,
-					username: userinfo.username,
-					email: userinfo.email,
-					token: token,
-					userId: userinfo.id,
-				}));
+				await requestLogin(username, password).then(res => {
+					const userinfo = res.user.user;
+					set(() => ({
+						avatar:userinfo.avatarPath,
+						username: userinfo.username,
+						email: userinfo.email,
+						token: res.token,
+						userId: userinfo.id,
+					}));
+				}).catch(ex => {
+					showToast(ex.message)
+				})
 			},
 			logout() {
 				set(() => ({
@@ -61,18 +133,10 @@ export const useAuthStore = create<AuthStore>()(
 				set(() => ({token: ""}));
 			},
 			async sendEmailCodeForResetPassword(email) {
-				return await requestSendEmailCode(email, true, {
-					onError: (err) => {
-						console.error(err);
-					},
-				});
+				return await requestSendEmailCode(email, true);
 			},
 			async sendEmailCode(email) {
-				return await requestSendEmailCode(email, false, {
-					onError: (err) => {
-						console.error(err);
-					},
-				});
+				return await requestSendEmailCode(email, false);
 			},
 			async register(
 				username,
@@ -102,23 +166,17 @@ export const useAuthStore = create<AuthStore>()(
 				return result;
 			},
 			async resetPassword(password, email, code) {
-				let result = await requestResetPassword(password, email, code, {
-					onError: (err) => {
-						console.error(err);
-					},
-				});
-				//console.log("result", result);
-				if (result && result.code == 0 && result.data) {
-					const data = result.data;
-					const user = data.userEntity;
-					set(() => ({
-						name: user.name || "",
-						username: user.username || "",
-						email: user.email || "",
-						token: data.token || "",
-					}));
-				}
-				return result;
+				await requestResetPassword(password, email, code)
+					.then(res => {
+						const data = res.data;
+						const user = data.userEntity;
+						set(() => ({
+							name: user.name || "",
+							username: user.username || "",
+							email: user.email || "",
+							token: data.token || "",
+						}));
+					});
 			},
 		}),
 		{
