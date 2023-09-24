@@ -36,7 +36,7 @@ export interface LoginValue {
 }
 
 const LoginPage = () => {
-  const [loginType, setLoginType] = useState<LoginType>("phone");
+  const [loginType, setLoginType] = useState<LoginType>("account");
 
   const authStore = useAuthStore();
   const navigate = useNavigate();
