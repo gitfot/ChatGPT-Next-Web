@@ -1,13 +1,10 @@
-// import axios, {AxiosError, AxiosRequestConfig} from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 // import {useAccessStore} from "@/app/store";
-import { showToast } from "../components/ui-lib";
+// import { showToast } from "../components/ui-lib";
 //
 // //基础URL，axios将会自动拼接在url前
-// //process.env.NODE_ENV 判断是否为开发环境 根据不同环境使用不同的baseURL 方便调试
-// const baseURL = process.env.BASE_URL;
-// // 根据构建模式拼接实际的请求URL
-//
-// //默认请求超时时间
+// // const baseURL = process.env.BASE_URL;
+// const baseURL = "http://127.0.0.1:3000/";
 // const timeout = 30000;
 // const {token} = useAccessStore.getState()
 //
@@ -21,7 +18,7 @@ import { showToast } from "../components/ui-lib";
 //
 // //统一请求拦截 可配置自定义headers 例如 language、token等
 // /* 请求拦截器 */
-// axios.interceptors.request.use((config) => {
+// service.interceptors.request.use((config) => {
 // 	  config.headers.Authorization = `Bearer ${token}`;
 // 	  return config
 // 	}, (error: AxiosError) => {

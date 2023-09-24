@@ -12,12 +12,20 @@ const en: LocaleType = {
       ? "Invalid API Key, please check it in [Settings](/#/settings) page."
       : "Unauthorized access, please enter access code in [auth](/#/auth) page, or enter your OpenAI API Key.",
   },
+  LoginPage: {
+    Toast: {
+      Success: "Login succeeded",
+      Logging: "Logging in...",
+      EmptyUserName: "Username or email cannot be empty",
+      EmptyPassword: "Password cannot be empty!",
+    },
+  },
   Auth: {
-    Title: "Need Access Code",
-    Tips: "Please enter access code below",
-    Input: "access code",
+    Title: "Welcome back!",
+    Name: "Please enter email",
+    Password: "Please enter password",
     Confirm: "Confirm",
-    Later: "Later",
+    Later: "Register new account",
   },
   ChatItem: {
     ChatItemCount: (count: number) => `${count} messages`,
