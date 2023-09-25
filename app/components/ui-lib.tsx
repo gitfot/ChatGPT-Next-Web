@@ -36,19 +36,6 @@ export function Popover(props: {
 	);
 }
 
-export function LightPopover(props:{
-	title?:string;
-	children?: JSX.Element;
-	content: JSX.Element;
-}) {
-	const text = <span>{props.title}</span>;
-	return (
-		<AntPopover placement="topLeft" title={text} content={props.content} trigger="click">
-			{props.children}
-		</AntPopover>
-	);
-}
-
 export function Card(props: { children: JSX.Element[]; className?: string }) {
 	return (
 		<div className={styles.card + " " + props.className}>{props.children}</div>

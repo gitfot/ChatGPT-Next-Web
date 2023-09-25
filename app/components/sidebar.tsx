@@ -26,7 +26,8 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
-import {LightPopover, showConfirm, showToast} from "./ui-lib";
+import {showConfirm, showToast} from "./ui-lib";
+import {LightPopover} from "../ui/ant-ui-lib";
 import {List} from 'antd';
 
 const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
