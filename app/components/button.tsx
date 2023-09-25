@@ -7,6 +7,7 @@ export type ButtonType = "primary" | "danger" | null;
 export function IconButton(props: {
   onClick?: () => void;
   icon?: JSX.Element;
+  maxIcon?:JSX.Element;
   type?: ButtonType;
   text?: string;
   bordered?: boolean;
@@ -32,6 +33,9 @@ export function IconButton(props: {
       tabIndex={props.tabIndex}
       autoFocus={props.autoFocus}
     >
+      {props.maxIcon && (
+          <div className={styles["icon-button-max"]}>{props.maxIcon}</div>
+      )}
       {props.icon && (
         <div
           className={

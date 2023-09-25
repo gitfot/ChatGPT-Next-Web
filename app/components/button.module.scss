@@ -65,6 +65,15 @@
   align-items: center;
 }
 
+.icon-button-max {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  margin: -6px;
+  justify-content: center;
+  align-items: center;
+}
+
 @media only screen and (max-width: 600px) {
   .icon-button {
     padding: 16px;
