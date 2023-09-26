@@ -159,11 +159,6 @@ input {
   font-family: inherit;
 }
 
-//button[type="button"] {
-//  background-color: var(--button-color);;
-//  color: white;
-//}
-
 input[type="checkbox"] {
   cursor: pointer;
   background-color: var(--white);
@@ -236,8 +231,7 @@ input[type="range"]::-ms-thumb:hover {
 
 input[type="number"],
 input[type="text"],
-input[type="email"],
-input[type="password"] {
+{
   appearance: none;
   border-radius: 10px;
   border: var(--border-in-light);

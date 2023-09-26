@@ -26,9 +26,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
-import {showConfirm, showToast} from "./ui-lib";
-import {LightPopover} from "../ui/ant-ui-lib";
-import {List} from 'antd';
+import { showConfirm, showToast } from "./ui-lib";
 
 const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
   loading: () => null,
@@ -148,17 +146,17 @@ export function SideBar(props: { className?: string }) {
 
       <div className={styles["sidebar-new-chat-button"]}>
         <IconButton
-            icon={<AddIcon />}
-            text={shouldNarrow ? undefined : Locale.Home.NewChat}
-            onClick={() => {
-              if (config.dontShowMaskSplashScreen) {
-                chatStore.newSession();
-                navigate(Path.Chat);
-              } else {
-                navigate(Path.NewChat);
-              }
-            }}
-            shadow
+          icon={<AddIcon />}
+          text={shouldNarrow ? undefined : Locale.Home.NewChat}
+          onClick={() => {
+            if (config.dontShowMaskSplashScreen) {
+              chatStore.newSession();
+              navigate(Path.Chat);
+            } else {
+              navigate(Path.NewChat);
+            }
+          }}
+          shadow
         />
       </div>
 
@@ -170,7 +168,7 @@ export function SideBar(props: { className?: string }) {
           }
         }}
       >
-        <p className={styles['sidebar-body-title']}>Chats</p>
+        <p className={styles["sidebar-body-title"]}>Chats</p>
 
         <ChatList narrow={shouldNarrow} />
       </div>
@@ -188,16 +186,7 @@ export function SideBar(props: { className?: string }) {
             />
           </div>
 
-          <div className={styles["sidebar-action"]}>
-            <LightPopover content={
-              <List size="small" split={false}
-                  dataSource={["settings","settings","settings","settings"]}
-                  renderItem={(item) => <List.Item>{item}</List.Item>}
-              />
-            }>
-              <IconButton maxIcon={<AvatarIcon />} shadow />
-            </LightPopover>
-          </div>
+          <div className={styles["sidebar-action"]}></div>
 
           <div className={styles["sidebar-action"]}>
             <Link to={Path.Settings}>

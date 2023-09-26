@@ -1,43 +1,51 @@
-import {
-  AlipayOutlined,
-  LockOutlined,
-  MobileOutlined,
-  TaobaoOutlined,
-  UserOutlined,
-  WeiboOutlined,
-} from "@ant-design/icons";
-import {
-  LoginFormPage,
-  ProFormCaptcha,
-  ProFormCheckbox,
-  ProFormText,
-} from "@ant-design/pro-components";
-import { Button, Divider, message, Space, Tabs } from "antd";
-import type { CSSProperties } from "react";
-import { useState } from "react";
-import Locale from "@/app/locales";
-import { showToast } from "@/app/components/ui-lib";
-import { Path } from "@/app/constant";
-import { useAuthStore, userInfo } from "@/app/store/api/auth";
+import { useAuthStore } from "@/app/store/api/auth";
 import { useNavigate } from "react-router-dom";
-
-type LoginType = "phone" | "account";
-
-const iconStyles: CSSProperties = {
-  color: "rgba(0, 0, 0, 0.2)",
-  fontSize: "18px",
-  verticalAlign: "middle",
-  cursor: "pointer",
-};
+import { showToast } from "@/app/components/ui-lib";
+import Locale from "@/app/locales";
+import { Path } from "@/app/constant";
+import React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import styles from "./login.module.scss";
 
 export interface LoginValue {
   username: string;
   password: string;
 }
 
-const LoginPage = () => {
-  const [loginType, setLoginType] = useState<LoginType>("account");
+function Copyright(props: any) {
+  return (
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
+      {"Copyright © "}
+      <Link color="inherit" href="https://mui.com/">
+        Your Website
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
 
+// TODO remove, this demo shouldn't need to reset the theme.
+const defaultTheme = createTheme();
+
+const LoginPage = () => {
   const authStore = useAuthStore();
   const navigate = useNavigate();
 
@@ -56,190 +64,92 @@ const LoginPage = () => {
     });
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get("email"),
+      password: data.get("password"),
+    });
+  };
+
   return (
-    <div
-      style={{
-        backgroundColor: "white",
-        height: "100%",
-        width: "100%",
-        margin: -24,
-      }}
-    >
-      <LoginFormPage
-        onFinish={onSubmit}
-        backgroundImageUrl="https://gw.alipayobjects.com/zos/rmsportal/FfdJeJRQWjEeGTpqgBKj.png"
-        logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
-        title={Locale.Auth.Title}
-        subTitle="AIGC NEXT WEB"
-        actions={
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <Divider plain>
-              <span
-                style={{ color: "#CCC", fontWeight: "normal", fontSize: 14 }}
-              >
-                其他登录方式
-              </span>
-            </Divider>
-            <Space align="center" size={24}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  flexDirection: "column",
-                  height: 40,
-                  width: 40,
-                  border: "1px solid #D4D8DD",
-                  borderRadius: "50%",
-                }}
-              >
-                <AlipayOutlined style={{ ...iconStyles, color: "#1677FF" }} />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  flexDirection: "column",
-                  height: 40,
-                  width: 40,
-                  border: "1px solid #D4D8DD",
-                  borderRadius: "50%",
-                }}
-              >
-                <TaobaoOutlined style={{ ...iconStyles, color: "#FF6A10" }} />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  flexDirection: "column",
-                  height: 40,
-                  width: 40,
-                  border: "1px solid #D4D8DD",
-                  borderRadius: "50%",
-                }}
-              >
-                <WeiboOutlined style={{ ...iconStyles, color: "#333333" }} />
-              </div>
-            </Space>
-          </div>
-        }
-      >
-        <Tabs
-          centered
-          activeKey={loginType}
-          onChange={(activeKey) => setLoginType(activeKey as LoginType)}
-        >
-          <Tabs.TabPane key={"account"} tab={"账号密码登录"} />
-          <Tabs.TabPane key={"phone"} tab={"手机号登录"} />
-        </Tabs>
-        {loginType === "account" && (
-          <>
-            <ProFormText
-              name="username"
-              fieldProps={{
-                size: "large",
-                prefix: <UserOutlined className={"prefixIcon"} />,
-              }}
-              placeholder={"用户名: admin or user"}
-              rules={[
-                {
-                  required: true,
-                  message: "请输入用户名!",
-                },
-              ]}
-            />
-            <ProFormText.Password
-              name="password"
-              fieldProps={{
-                size: "large",
-                prefix: <LockOutlined className={"prefixIcon"} />,
-              }}
-              placeholder={"密码: ant.design"}
-              rules={[
-                {
-                  required: true,
-                  message: "请输入密码！",
-                },
-              ]}
-            />
-          </>
-        )}
-        {loginType === "phone" && (
-          <>
-            <ProFormText
-              fieldProps={{
-                size: "large",
-                prefix: <MobileOutlined className={"prefixIcon"} />,
-              }}
-              name="mobile"
-              placeholder={"手机号"}
-              rules={[
-                {
-                  required: true,
-                  message: "请输入手机号！",
-                },
-                {
-                  pattern: /^1\d{10}$/,
-                  message: "手机号格式错误！",
-                },
-              ]}
-            />
-            <ProFormCaptcha
-              fieldProps={{
-                size: "large",
-                prefix: <LockOutlined className={"prefixIcon"} />,
-              }}
-              captchaProps={{
-                size: "large",
-              }}
-              placeholder={"请输入验证码"}
-              captchaTextRender={(timing, count) => {
-                if (timing) {
-                  return `${count} ${"获取验证码"}`;
-                }
-                return "获取验证码";
-              }}
-              name="captcha"
-              rules={[
-                {
-                  required: true,
-                  message: "请输入验证码！",
-                },
-              ]}
-              onGetCaptcha={async () => {
-                message.success("获取验证码成功！验证码为：1234");
-              }}
-            />
-          </>
-        )}
-        <div
-          style={{
-            marginBlockEnd: 24,
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <ProFormCheckbox noStyle name="autoLogin">
-            自动登录
-          </ProFormCheckbox>
-          <a
-            style={{
-              float: "right",
-            }}
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
           >
-            忘记密码
-          </a>
-        </div>
-      </LoginFormPage>
-    </div>
+            <TextField
+              type="email"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              InputProps={{
+                className: styles["email-input"],
+              }}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+        <Copyright sx={{ mt: 8, mb: 4 }} />
+      </Container>
+    </ThemeProvider>
   );
 };
 export default LoginPage;
