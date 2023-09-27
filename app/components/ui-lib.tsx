@@ -14,7 +14,6 @@ import Locale from "../locales";
 
 import {createRoot} from "react-dom/client";
 import React, {HTMLProps, useEffect, useState} from "react";
-import {Popover as AntPopover } from 'antd';
 import {IconButton} from "./button";
 
 export function Popover(props: {
