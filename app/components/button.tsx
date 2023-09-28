@@ -5,9 +5,9 @@ import styles from "./button.module.scss";
 export type ButtonType = "primary" | "danger" | null;
 
 export function IconButton(props: {
-  onClick?: () => void;
+  onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
   icon?: JSX.Element;
-  maxIcon?:JSX.Element;
+  maxIcon?: JSX.Element;
   type?: ButtonType;
   text?: string;
   bordered?: boolean;
@@ -34,7 +34,7 @@ export function IconButton(props: {
       autoFocus={props.autoFocus}
     >
       {props.maxIcon && (
-          <div className={styles["icon-button-max"]}>{props.maxIcon}</div>
+        <div className={styles["icon-button-max"]}>{props.maxIcon}</div>
       )}
       {props.icon && (
         <div

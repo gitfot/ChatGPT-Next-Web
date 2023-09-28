@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import styles from "./home.module.scss";
 
@@ -10,7 +10,6 @@ import CloseIcon from "../icons/close.svg";
 import MaskIcon from "../icons/mask.svg";
 import PluginIcon from "../icons/plugin.svg";
 import DragIcon from "../icons/drag.svg";
-import AvatarIcon from "../icons/avatar-30.svg";
 
 import Locale from "../locales";
 
@@ -27,6 +26,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { showConfirm, showToast } from "./ui-lib";
+import ProfileConfig from "@/app/components/profile-config";
 
 const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
   loading: () => null,
@@ -186,7 +186,9 @@ export function SideBar(props: { className?: string }) {
             />
           </div>
 
-          <div className={styles["sidebar-action"]}></div>
+          <div className={styles["sidebar-action"]}>
+            <ProfileConfig />
+          </div>
 
           <div className={styles["sidebar-action"]}>
             <Link to={Path.Settings}>
