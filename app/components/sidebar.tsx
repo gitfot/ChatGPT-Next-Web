@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./home.module.scss";
 
 import { IconButton } from "./button";
-import SettingsIcon from "../icons/settings.svg";
+import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ChatGptIcon from "../icons/chatgpt.svg";
 import AddIcon from "../icons/add.svg";
 import CloseIcon from "../icons/close.svg";
@@ -135,9 +135,7 @@ export function SideBar(props: { className?: string }) {
                     icon={<MaskIcon />}
                     text={shouldNarrow ? undefined : Locale.Mask.Name}
                     className={styles["sidebar-bar-button"]}
-                    onClick={() =>
-                        navigate(Path.NewChat, { state: { fromHome: true } })
-                    }
+                    onClick={() => navigate(Path.Masks)}
                     shadow
                 />
                 <IconButton
@@ -179,33 +177,35 @@ export function SideBar(props: { className?: string }) {
             </div>
 
             <div className={styles["sidebar-tail"]}>
-                <div className={styles["sidebar-actions"]}>
-                    <div
-                        className={
-                            styles["sidebar-action"] + " " + styles.mobile
+                <div className={styles["sidebar-action"] + " " + styles.mobile}>
+                    <IconButton
+                        icon={<CloseIcon />}
+                        onClick={async () => {
+                            if (await showConfirm(Locale.Home.DeleteChat)) {
+                                chatStore.deleteSession(
+                                    chatStore.currentSessionIndex,
+                                );
+                            }
+                        }}
+                    />
+                </div>
+
+                <div className={styles["sidebar-action"]}>
+                    <ProfileConfig />
+                </div>
+
+                <div className={styles["sidebar-bar-plan"]}>
+                    <IconButton
+                        className={styles["plan-button"]}
+                        icon={<ThumbUpOffAltIcon fontSize={"small"} />}
+                        text={shouldNarrow ? undefined : Locale.Home.Plan}
+                        onClick={() =>
+                            navigate(Path.NewChat, {
+                                state: { fromHome: true },
+                            })
                         }
-                    >
-                        <IconButton
-                            icon={<CloseIcon />}
-                            onClick={async () => {
-                                if (await showConfirm(Locale.Home.DeleteChat)) {
-                                    chatStore.deleteSession(
-                                        chatStore.currentSessionIndex,
-                                    );
-                                }
-                            }}
-                        />
-                    </div>
-
-                    <div className={styles["sidebar-action"]}>
-                        <ProfileConfig />
-                    </div>
-
-                    <div className={styles["sidebar-action"]}>
-                        <Link to={Path.Settings}>
-                            <IconButton icon={<SettingsIcon />} shadow />
-                        </Link>
-                    </div>
+                        shadow
+                    />
                 </div>
             </div>
 

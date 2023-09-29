@@ -72,7 +72,7 @@
 
   --window-width: 90vw;
   --window-height: 90vh;
-  --sidebar-width: 300px;
+  --sidebar-width: 250px;
   --window-content-width: calc(100% - var(--sidebar-width));
   --message-max-width: 80%;
   --full-height: 100%;
@@ -383,9 +383,5 @@ pre {
 
 .MuiListItemIcon-root {
   min-width: 36px !important;
-}
-
-.MuiSvgIcon-root {
-  font-size: 16px !important;
 }
 

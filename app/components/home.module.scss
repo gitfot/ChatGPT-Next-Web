@@ -340,6 +340,14 @@
     margin-right: 15px;
 }
 
+.sidebar-bar-plan {
+    flex-grow: 1;
+    display: flex;
+    .plan-button {
+        flex-grow: 1;
+    }
+}
+
 .loading-content {
     display: flex;
     flex-direction: column;
