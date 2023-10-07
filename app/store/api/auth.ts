@@ -60,7 +60,7 @@ export interface RegisterResult {
 }
 
 export async function requestLogin(username: string, password: string): Promise<LoginResult> {
-	return request.post("/auth/login", {username, password});
+	return request.post("/login", {username, password});
 }
 
 export async function requestRegister(
@@ -108,16 +108,9 @@ export const useAuthStore = create<AuthStore>()(
 			token: "",
 			async login(username, password) {
 				await requestLogin(username, password).then(res => {
-					const userinfo = res.user.user;
 					set(() => ({
-						avatar:userinfo.avatarPath,
-						username: userinfo.username,
-						email: userinfo.email,
 						token: res.token,
-						userId: userinfo.id,
 					}));
-				}).catch(ex => {
-					showToast(ex.message)
 				})
 			},
 			logout() {

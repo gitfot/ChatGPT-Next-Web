@@ -21,7 +21,11 @@ export async function requestHandler<T>(
     }
     throw new Error((await response.json()).message);
   }
-  return await response.json();
+  let json = await response.json();
+  if (json.code != 200) {
+    throw new Error(json.msg)
+  }
+  return json;
 }
 
 // 使用 request 统一调用，包括封装的get、post、put、delete等方法

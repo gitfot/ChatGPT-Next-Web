@@ -56,13 +56,8 @@ const LoginPage = () => {
         const password = data.get("password")?.toString() ?? "";
         authStore.login(username, password).then((result) => {
             console.log("result", result);
-            if (result && result.code == 200) {
-                showToast(Locale.LoginPage.Toast.Success);
-                navigate(Path.Chat);
-            } else if (result && result.message) {
-                showToast(result.message);
-            }
-        });
+            navigate(Path.Chat);
+        }).catch(e => showToast(e.message));
     };
 
     return (
