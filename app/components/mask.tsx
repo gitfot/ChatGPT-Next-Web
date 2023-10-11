@@ -59,13 +59,16 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
 }
 
 export function MaskAvatar(props: { mask: Mask }) {
-	return props.mask.avatar !== DEFAULT_MASK_AVATAR ? (
-		<Avatar avatar={props.mask.avatar}/>
-	) : (
+	return (
 		<Avatar model={props.mask.modelConfig.model}/>
 	);
 }
 
+/**
+ * 更新面具
+ * @param props
+ * @constructor
+ */
 export function MaskConfig(props: {
 	mask: Mask;
 	updateMask: Updater<Mask>;
@@ -111,7 +114,7 @@ export function MaskConfig(props: {
 						content={
 							<AvatarPicker
 								onEmojiClick={(emoji) => {
-									props.updateMask((mask) => (mask.avatar = emoji));
+									// props.updateMask((mask) => (mask.avatar = emoji));
 									setShowPicker(false);
 								}}
 							></AvatarPicker>
@@ -206,6 +209,11 @@ export function MaskConfig(props: {
 	);
 }
 
+/**
+ *
+ * @param props
+ * @constructor
+ */
 function ContextPromptItem(props: {
 	index: number;
 	prompt: ChatMessage;
@@ -270,6 +278,11 @@ function ContextPromptItem(props: {
 	);
 }
 
+/**
+ * 编辑预设面具->>新增对话
+ * @param props
+ * @constructor
+ */
 export function ContextPrompts(props: {
 	context: ChatMessage[];
 	updateContext: (updater: (context: ChatMessage[]) => void) => void;
@@ -377,6 +390,10 @@ export function ContextPrompts(props: {
 	);
 }
 
+/**
+ *
+ * @constructor
+ */
 export function MaskPage() {
 	const navigate = useNavigate();
 
@@ -519,9 +536,6 @@ export function MaskPage() {
 						{masks.map((m) => (
 							<div className={styles["mask-item"]} key={m.id}>
 								<div className={styles["mask-header"]}>
-									<div className={styles["mask-icon"]}>
-										<MaskAvatar mask={m}/>
-									</div>
 									<div className={styles["mask-title"]}>
 										<div className={styles["mask-name"]}>{m.name}</div>
 										<div className={styles["mask-info"] + " one-line"}>

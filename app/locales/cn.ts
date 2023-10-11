@@ -303,7 +303,7 @@ const cn = {
     Mask: {
         Name: "提示词",
         Page: {
-            Title: "预设角色面具",
+            Title: "预设提示词",
             SubTitle: (count: number) => `${count} 个预设角色定义`,
             Search: "搜索提示词",
             Create: "新建",
