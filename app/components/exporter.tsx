@@ -482,7 +482,6 @@ export function ImagePreviewer(props: {
             <div className={styles["icons"]}>
               <ExportAvatar avatar={config.avatar} />
               <span className={styles["icon-space"]}>&</span>
-              <ExportAvatar avatar={mask.avatar} />
             </div>
           </div>
           <div>
@@ -511,7 +510,7 @@ export function ImagePreviewer(props: {
             >
               <div className={styles["avatar"]}>
                 <ExportAvatar
-                  avatar={m.role === "user" ? config.avatar : mask.avatar}
+                  avatar={config.avatar }
                 />
               </div>
 

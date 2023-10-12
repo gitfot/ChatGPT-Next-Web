@@ -1,3 +1,5 @@
+import {getHeaders} from "@/app/client/api";
+
 export async function requestHandler<T>(
   method: string,
   url: string,
@@ -9,7 +11,7 @@ export async function requestHandler<T>(
   const response = await fetch(requestUrl, {
     method: method,
     headers: {
-      "Content-Type": "application/json",
+      ...getHeaders(),
     },
     body: JSON.stringify(body),
   });

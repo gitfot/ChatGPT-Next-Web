@@ -6,6 +6,8 @@ import {DEFAULT_TOPIC, ChatMessage} from "./chat";
 import {ModelConfig, useAppConfig} from "./config";
 import {StoreKey} from "../constant";
 import {nanoid} from "nanoid";
+import {request} from "@/app/requests";
+import {CommonResponse, PageResponse} from "@/app/client/api";
 
 export type Mask = {
 	id: string;
@@ -30,8 +32,8 @@ type MaskStore = MaskState & {
 	update: (id: string, updater: (mask: Mask) => void) => void;
 	delete: (id: string) => void;
 	search: (text: string) => Mask[];
-	get: (id?: string) => Mask | null;
-	getAll: () => Mask[];
+	get: (id?: string) => Mask;
+	getAll: () => Promise<Mask[]>;
 };
 
 export const DEFAULT_MASK_AVATAR = "gpt-bot";
@@ -47,6 +49,18 @@ export const createEmptyMask = () =>
 		lang: getLang(),
 		builtin: false,
 	} as Mask);
+
+export async function requestGetMaskList(): Promise<PageResponse<Mask>> {
+    return request.get("/chat/prompt/list");
+}
+
+export async function requestAddMask(mask: Partial<Mask>): Promise<CommonResponse<any>> {
+	return request.post("/chat/prompt/add", mask);
+}
+
+export async function requestUpdateMask(mask: Partial<Mask>): Promise<CommonResponse<any>> {
+    return request.post("/chat/prompt/update", mask);
+}
 
 /**
  * 面具Store操作类
@@ -88,21 +102,15 @@ export const useMaskStore = create<MaskStore>()(
 			get(id) {
 				return get().masks[id ?? 1145141919810];
 			},
-			getAll() {
-				const userMasks = Object.values(get().masks);
-				const config = useAppConfig.getState();
-				if (config.hideBuiltinMasks) return userMasks;
-				const buildinMasks = BUILTIN_MASKS.map(
-					(m) =>
-						({
-							...m,
-							modelConfig: {
-								...config.modelConfig,
-								...m.modelConfig,
-							},
-						} as Mask),
-				);
-				return userMasks.concat(buildinMasks);
+			async getAll() {
+				let masks = {} as Record<string, Mask>;
+				return await requestGetMaskList().then( res => {
+					res.rows.map( m => {
+						masks[m.id] = m;
+					})
+					set(() => ({masks}))
+					return res.rows;
+				})
 			},
 			search(text) {
 				return Object.values(get().masks);

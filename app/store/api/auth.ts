@@ -3,14 +3,14 @@ import {persist} from "zustand/middleware";
 import {StoreKey} from "../../constant";
 // import {request} from "../../utils/request"
 import {request} from "../../requests"
-import {showToast} from "@/app/components/ui-lib";
+import {CommonResponse} from "@/app/client/api";
 
 export interface AuthStore {
 	token: string;
 	username: string;
 	email: string;
 	avatar:string;
-	userId:string
+	userId:string;
 	login: (username: string, password: string) => Promise<any>;
 	logout: () => void;
 	sendEmailCode: (email: string) => Promise<any>;
@@ -53,12 +53,6 @@ export interface LoginResult {
 	}
 }
 
-export interface RegisterResult {
-    code: number;
-    message: string;
-    data?: any;
-}
-
 export async function requestLogin(username: string, password: string): Promise<LoginResult> {
 	return request.post("/login", {username, password});
 }
@@ -70,7 +64,7 @@ export async function requestRegister(
 	captchaInput: string,
 	email: string,
 	code: string,
-): Promise<RegisterResult> {
+): Promise<CommonResponse<any>> {
 	return request.post(
 		"/register",
 		{username, password, captchaId, captcha: captchaInput, email, code},
@@ -80,7 +74,7 @@ export async function requestRegister(
 export async function requestSendEmailCode(
 	email: string,
 	resetPassword: boolean,
-): Promise<RegisterResult> {
+): Promise<CommonResponse<any>> {
 	return request.post(
 		"/sendRegisterEmailCode",
 		{
@@ -94,7 +88,7 @@ export async function requestResetPassword(
     password: string,
     email: string,
     code: string,
-): Promise<RegisterResult> {
+): Promise<CommonResponse<any>> {
     return request.post("/resetPassword", {password, code, email});
 }
 
